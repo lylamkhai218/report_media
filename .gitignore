@@ -1,0 +1,8 @@
+# Ignore raw CSV files to protect data privacy
+*.csv
+
+# Ignore text logs or backup scripts
+*.txt
+
+# Ignore temporary batch files if any
+*.tmp

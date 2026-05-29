@@ -1,0 +1,12 @@
+{
+  "name": "report-media",
+  "version": "1.0.0",
+  "description": "Facebook Video Retention Report Dashboard",
+  "main": "create_report.py",
+  "scripts": {
+    "deploy": "gh-pages -d ."
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  }
+}
