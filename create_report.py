@@ -19,7 +19,7 @@ if csv_files:
 else:
     CSV_PATH = os.path.join(REPORT_DIR, "Tỉ lệ giữu chân May-01-2026_May-28-2026_3422172974611676.csv")
 
-HTML_OUTPUT = os.path.join(REPORT_DIR, "report_giu_chan.html")
+HTML_OUTPUT = os.path.join(REPORT_DIR, "report_media.html")
 CSV_OUTPUT = os.path.join(REPORT_DIR, "report_giu_chan_summary.csv")
 
 def safe_float(val, default=0.0):
