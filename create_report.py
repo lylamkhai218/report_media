@@ -743,6 +743,11 @@ def generate_html_report(posts):
                 </div>
             </div>
 
+            <!-- Mobile scroll hint -->
+            <div class="md:hidden mb-2.5 text-[11px] text-gray-400 font-semibold" style="color: #9ca3af; font-size: 11px; margin-bottom: 10px;" data-i18n="table_scroll_hint">
+                👈 Vuốt ngang sang trái/phải để xem đầy đủ chỉ số giữ chân
+            </div>
+
             <!-- Table Container (Horizontal scroll on mobile, visible on desktop for sticky headers) -->
             <div class="table-container custom-scrollbar border border-gray-800 rounded-lg bg-gray-950/20">
                 <table class="w-full text-left text-sm text-gray-200 border-collapse">
@@ -819,6 +824,7 @@ def generate_html_report(posts):
                 gender_female: "Nữ",
                 table_title: "Bảng Xếp Hạng Hiệu Quả Truyền Thông",
                 table_sub: "Danh sách tổng hợp hiệu quả và tỉ lệ giữ chân chi tiết",
+                table_scroll_hint: "👈 Vuốt ngang sang trái/phải để xem đầy đủ chỉ số giữ chân",
                 table_search: "Tìm kiếm bài viết...",
                 table_sort_views: "Xem nhiều nhất",
                 table_sort_ret: "Giữ Chân 50%",
@@ -862,6 +868,7 @@ def generate_html_report(posts):
                 gender_female: "Female",
                 table_title: "Media Performance Leaderboard",
                 table_sub: "Comprehensive ranking of post metrics and retention checkpoints",
+                table_scroll_hint: "👈 Swipe horizontally to view complete retention metrics",
                 table_search: "Search posts...",
                 table_sort_views: "Most Viewed",
                 table_sort_ret: "50% Retention",
@@ -1269,15 +1276,27 @@ def generate_html_report(posts):
         
         document.getElementById('tab-demo-btn').addEventListener('click', (e) => {
             activeAudienceTab = 'demo';
-            e.target.className = "px-3 py-1.5 text-xs font-bold bg-indigo-600 text-white rounded-lg transition-colors";
-            document.getElementById('tab-geo-btn').className = "px-3 py-1.5 text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors";
+            const btnDemo = document.getElementById('tab-demo-btn');
+            const btnGeo = document.getElementById('tab-geo-btn');
+            btnDemo.style.backgroundColor = "#4f46e5";
+            btnDemo.style.color = "#ffffff";
+            btnDemo.className = "px-3 py-1.5 text-xs font-bold bg-indigo-600 text-white rounded-lg transition-colors";
+            btnGeo.style.backgroundColor = "#374151";
+            btnGeo.style.color = "#d1d5db";
+            btnGeo.className = "px-3 py-1.5 text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors";
             renderAudienceChart();
         });
         
         document.getElementById('tab-geo-btn').addEventListener('click', (e) => {
             activeAudienceTab = 'geo';
-            e.target.className = "px-3 py-1.5 text-xs font-bold bg-indigo-600 text-white rounded-lg transition-colors";
-            document.getElementById('tab-demo-btn').className = "px-3 py-1.5 text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors";
+            const btnDemo = document.getElementById('tab-demo-btn');
+            const btnGeo = document.getElementById('tab-geo-btn');
+            btnGeo.style.backgroundColor = "#4f46e5";
+            btnGeo.style.color = "#ffffff";
+            btnGeo.className = "px-3 py-1.5 text-xs font-bold bg-indigo-600 text-white rounded-lg transition-colors";
+            btnDemo.style.backgroundColor = "#374151";
+            btnDemo.style.color = "#d1d5db";
+            btnDemo.className = "px-3 py-1.5 text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors";
             renderAudienceChart();
         });
 
@@ -1373,15 +1392,27 @@ def generate_html_report(posts):
         
         document.getElementById('sort-views-btn').addEventListener('click', (e) => {
             currentSort = 'views';
-            e.target.className = "px-3.5 py-2.5 text-xs font-bold bg-indigo-600 text-white rounded-lg transition-colors";
-            document.getElementById('sort-ret-btn').className = "px-3.5 py-2.5 text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors";
+            const btnViews = document.getElementById('sort-views-btn');
+            const btnRet = document.getElementById('sort-ret-btn');
+            btnViews.style.backgroundColor = "#4f46e5";
+            btnViews.style.color = "#ffffff";
+            btnViews.className = "flex-1 sm:flex-none px-3.5 py-2.5 text-xs font-bold bg-indigo-600 text-white rounded-lg transition-colors";
+            btnRet.style.backgroundColor = "#374151";
+            btnRet.style.color = "#d1d5db";
+            btnRet.className = "flex-1 sm:flex-none px-3.5 py-2.5 text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors";
             renderTable();
         });
         
         document.getElementById('sort-ret-btn').addEventListener('click', (e) => {
             currentSort = 'ret';
-            e.target.className = "px-3.5 py-2.5 text-xs font-bold bg-indigo-600 text-white rounded-lg transition-colors";
-            document.getElementById('sort-views-btn').className = "px-3.5 py-2.5 text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors";
+            const btnViews = document.getElementById('sort-views-btn');
+            const btnRet = document.getElementById('sort-ret-btn');
+            btnRet.style.backgroundColor = "#4f46e5";
+            btnRet.style.color = "#ffffff";
+            btnRet.className = "flex-1 sm:flex-none px-3.5 py-2.5 text-xs font-bold bg-indigo-600 text-white rounded-lg transition-colors";
+            btnViews.style.backgroundColor = "#374151";
+            btnViews.style.color = "#d1d5db";
+            btnViews.className = "flex-1 sm:flex-none px-3.5 py-2.5 text-xs font-bold bg-gray-800 text-gray-300 hover:bg-gray-700 rounded-lg transition-colors";
             renderTable();
         });
 
