@@ -13,7 +13,7 @@ Dự án này tự động hóa quy trình phân tích dữ liệu hiệu quả 
 d:\T&TVina\Report\
 ├── Tỉ lệ giữu chân May-01-2026_May-28-2026_...csv  # File dữ liệu CSV gốc từ Facebook
 ├── create_report.py                                # Script Python xử lý và kết xuất báo cáo
-├── report_giu_chan.html                            # Trang Dashboard báo cáo HTML (đã kết xuất)
+├── report_media.html                            # Trang Dashboard báo cáo HTML (đã kết xuất)
 ├── report_giu_chan_summary.csv                    # File tổng hợp kết quả (đọc tốt trên Excel)
 ├── index.html                                      # File chuyển hướng tự động (redirect) lên web
 ├── Cập Nhật Báo Cáo.bat                            # File chạy tự động hóa (chạy bằng click chuột)
@@ -37,7 +37,7 @@ Mã nguồn Python có nhiệm vụ:
 
 ### 2. Tự động hóa Quy trình (`Cập Nhật Báo Cáo.bat`)
 Mỗi khi bạn chạy tệp này, Windows sẽ tự động thực hiện tuần tự:
-1. Chạy mã Python để cập nhật số liệu mới nhất vào file `report_giu_chan.html` và `report_giu_chan_summary.csv`.
+1. Chạy mã Python để cập nhật số liệu mới nhất vào file `report_media.html` và `report_giu_chan_summary.csv`.
 2. Chạy lệnh Git để lưu trữ lịch sử thay đổi của bạn lên nhánh **`main`** của GitHub để sao lưu.
 3. Chạy công cụ deploy đẩy bản build sạch lên nhánh **`gh-pages`** của GitHub để cập nhật trang web trực tuyến tức thì.
 
