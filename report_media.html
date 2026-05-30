@@ -217,36 +217,36 @@
             width: 260px !important;
         }
         
-        .table-container th:first-child {
-            background-color: #0d1321 !important;
-            z-index: 25 !important;
-        }
-        
-        .table-container td:first-child {
-            background-color: #0a0f1d !important;
-            z-index: 5 !important;
-            box-shadow: 4px 0 8px -4px rgba(0, 0, 0, 0.6);
-        }
+
         
         tr:hover td:first-child {
             background-color: #172033 !important;
         }
         
-        /* Desktop sticky positioning */
+        /* Sticky header row */
         .sticky-th {
-            position: relative;
+            position: sticky;
+            top: 0;
             background-color: #0d1321;
+            z-index: 20;
+            box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.09);
         }
         @media (min-width: 768px) {
             .table-container {
                 overflow: visible;
             }
             .sticky-th {
-                position: sticky;
                 top: 85px;
                 z-index: 10;
-                box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.09);
             }
+            /* First header cell needs both top and left sticky on desktop */
+            .table-container th:first-child {
+                position: sticky !important;
+                top: 85px !important;
+                left: 0 !important;
+                z-index: 30 !important;
+            }
+        }
             /* First header cell needs both top and left sticky on desktop */
             .table-container th:first-child {
                 position: sticky !important;
