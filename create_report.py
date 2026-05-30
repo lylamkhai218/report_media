@@ -492,6 +492,8 @@ def generate_html_report(posts):
         
         .table-container {
             overflow-x: auto;
+            overflow-y: auto;
+            max-height: 70vh;
             border: 1px solid #1f2937;
             border-radius: 12px;
             background-color: rgba(19, 26, 42, 0.5);
@@ -574,29 +576,24 @@ def generate_html_report(posts):
         
 
         
-        /* Sticky header row */
+        /* Sticky header row - sticky within scroll container */
         .sticky-th {
             position: sticky;
-            top: 85px;
+            top: 0;
             background-color: #0d1321;
             z-index: 20;
-            box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.09);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
         @media (min-width: 768px) {
             .table-container {
-                overflow: visible;
+                max-height: none;
+                overflow-y: visible;
+                overflow-x: auto;
             }
             .sticky-th {
+                position: sticky;
                 top: 85px;
                 z-index: 10;
-                box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.09);
-            }
-            /* First header cell needs both top and left sticky on desktop */
-            .table-container th:first-child {
-                position: sticky !important;
-                top: 85px !important;
-                left: 0 !important;
-                z-index: 30 !important;
             }
         }
     </style>
