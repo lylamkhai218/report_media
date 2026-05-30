@@ -138,12 +138,21 @@
         
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             text-align: left;
         }
         
         th, td {
             padding: 14px 16px;
+        }
+
+        td {
+            font-size: 14px;
+            max-width: 280px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
@@ -152,14 +161,8 @@
             color: #9ca3af;
             font-size: 12px;
             text-transform: uppercase;
-        }
-        
-        td {
-            font-size: 14px;
-            max-width: 280px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            /* border-collapse:separate friendly sticky border */
+            border-bottom: 2px solid rgba(255,255,255,0.1);
         }
         
         .badge {
