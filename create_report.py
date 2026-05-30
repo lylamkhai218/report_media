@@ -1213,6 +1213,14 @@ def generate_html_report(posts):
                         responsive: true,
                         maintainAspectRatio: false,
                         indexAxis: 'y',
+                        layout: {
+                            padding: {
+                                left: 15,
+                                right: 10,
+                                top: 0,
+                                bottom: 0
+                            }
+                        },
                         scales: {
                             x: {
                                 stacked: true,
