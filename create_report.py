@@ -8,19 +8,37 @@ import glob
 if sys.platform.startswith('win'):
     sys.stdout.reconfigure(encoding='utf-8')
 
-# Tự động tìm kiếm file "Tỉ lệ giữ chân..." hoặc "Tỉ lệ giữu chân..." mới nhất trong thư mục
+# Tự động tìm kiếm file CSV dữ liệu Facebook Insights mới nhất trong thư mục
 REPORT_DIR = r"d:\T&TVina\Report"
-csv_files = glob.glob(os.path.join(REPORT_DIR, "Tỉ lệ gi* chân*.csv"))
-
-if csv_files:
-    # Sắp xếp theo thời gian chỉnh sửa (mới nhất lên đầu)
-    csv_files.sort(key=os.path.getmtime, reverse=True)
-    CSV_PATH = csv_files[0]
-else:
-    CSV_PATH = os.path.join(REPORT_DIR, "Tỉ lệ giữu chân May-01-2026_May-28-2026_3422172974611676.csv")
-
 HTML_OUTPUT = os.path.join(REPORT_DIR, "report_media.html")
 CSV_OUTPUT = os.path.join(REPORT_DIR, "report_giu_chan_summary.csv")
+
+def find_newest_csv():
+    # Tìm tất cả file csv trừ file summary
+    all_csvs = glob.glob(os.path.join(REPORT_DIR, "*.csv"))
+    valid_csvs = []
+    for fpath in all_csvs:
+        # Bỏ qua file summary đầu ra
+        if os.path.abspath(fpath) == os.path.abspath(CSV_OUTPUT):
+            continue
+        # Kiểm tra nhanh xem file có chứa cột "ID bài viết" hoặc "Post ID" không
+        try:
+            with open(fpath, mode='r', encoding='utf-8-sig', errors='ignore') as f:
+                header = f.readline()
+                if "ID bài viết" in header or "Post ID" in header:
+                    valid_csvs.append(fpath)
+        except Exception:
+            pass
+            
+    if valid_csvs:
+        # Sắp xếp theo thời gian chỉnh sửa (mới nhất lên đầu)
+        valid_csvs.sort(key=os.path.getmtime, reverse=True)
+        return valid_csvs[0]
+    return None
+
+CSV_PATH = find_newest_csv()
+if not CSV_PATH:
+    CSV_PATH = os.path.join(REPORT_DIR, "Tỉ lệ giữu chân May-01-2026_May-28-2026_3422172974611676.csv")
 
 def safe_float(val, default=0.0):
     try:
@@ -193,6 +211,49 @@ def generate_csv_summary(posts):
     print(f"Generated CSV summary: {CSV_OUTPUT}")
 
 def generate_html_report(posts):
+    import re
+    
+    # Map months to strings
+    months_map_vi = {
+        "jan": "tháng 1", "feb": "tháng 2", "mar": "tháng 3", "apr": "tháng 4", "may": "tháng 5", "jun": "tháng 6",
+        "jul": "tháng 7", "aug": "tháng 8", "sep": "tháng 9", "oct": "tháng 10", "nov": "tháng 11", "dec": "tháng 12"
+    }
+    months_map_en = {
+        "jan": "Jan", "feb": "Feb", "mar": "Mar", "apr": "Apr", "may": "May", "jun": "Jun",
+        "jul": "Jul", "aug": "Aug", "sep": "Sep", "oct": "Oct", "nov": "Nov", "dec": "Dec"
+    }
+    months_num_map = {
+        "jan": 1, "feb": 2, "mar": 3, "apr": 4, "may": 5, "jun": 6,
+        "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12
+    }
+
+    report_date = "29/05/2026"
+    report_subtitle_vi = "Murrplastik Việt Nam · Báo cáo tháng 5"
+    report_subtitle_en = "Murrplastik Vietnam · Report from May-01-2026 to May-28-2026"
+
+    filename = os.path.basename(CSV_PATH)
+    # Tìm định dạng ngày tháng: ví dụ May-01-2026_May-31-2026
+    match = re.search(r"([A-Za-z]{3}-\d{2}-\d{4})_([A-Za-z]{3}-\d{2}-\d{4})", filename)
+    if match:
+        start_str, end_str = match.groups()
+        parts_start = start_str.split('-')
+        parts_end = end_str.split('-')
+        if len(parts_start) == 3 and len(parts_end) == 3:
+            s_m, s_d, s_y = parts_start
+            e_m, e_d, e_y = parts_end
+            
+            s_m_idx = months_num_map.get(s_m.lower(), 5)
+            e_m_idx = months_num_map.get(e_m.lower(), 5)
+            
+            report_date = f"{e_d}/{e_m_idx:02d}/{e_y}"
+            
+            if s_m.lower() == e_m.lower() and s_y == e_y:
+                report_subtitle_vi = f"Murrplastik Việt Nam · Báo cáo tháng {e_m_idx}"
+                report_subtitle_en = f"Murrplastik Vietnam · Report for {months_map_en.get(e_m.lower(), e_m)} {e_y}"
+            else:
+                report_subtitle_vi = f"Murrplastik Việt Nam · Báo cáo từ tháng {s_m_idx} đến tháng {e_m_idx}"
+                report_subtitle_en = f"Murrplastik Vietnam · Report from {start_str} to {end_str}"
+
     # Calculate global metrics
     total_views = sum(p['views'] for p in posts)
     total_reach = sum(p['reach'] for p in posts)
@@ -610,7 +671,7 @@ def generate_html_report(posts):
                 <img src="logo_murrplastik_vn_v2.png" alt="Logo Murrplastik" class="w-14 h-14 rounded-lg object-contain shadow-lg" style="width: 56px; height: 56px; border-radius: 8px; flex-shrink: 0; object-fit: contain;">
                 <div>
                     <h1 class="text-xl md:text-2xl font-extrabold tracking-tight text-white" style="margin:0; font-size: 20px; font-weight: 800;" data-i18n="title">PHÂN TÍCH HIỆU QUẢ TRUYỀN THÔNG</h1>
-                    <p class="text-xs md:text-sm text-gray-400 font-medium" style="margin:0; color:#9ca3af; font-size: 13px;" data-i18n="subtitle">Murrplastik Việt Nam · Báo cáo tháng 5</p>
+                    <p class="text-xs md:text-sm text-gray-400 font-medium" style="margin:0; color:#9ca3af; font-size: 13px;" data-i18n="subtitle">{REPORT_SUBTITLE_VI_FMT}</p>
                 </div>
             </div>
             
@@ -629,7 +690,7 @@ def generate_html_report(posts):
                         <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" style="display:inline-block; width:6px; height:6px; border-radius:9999px; background-color:#34d399;"></span>
                         <span data-i18n="status">Hoàn tất</span>
                     </span>
-                    <span class="text-xs text-gray-400 font-medium bg-gray-900/60 px-2.5 py-1.5 rounded border border-gray-800" style="font-size:12px; color:#9ca3af; background-color: rgba(17,24,39,0.6); padding:6px 10px; border-radius:4px; border: 1px solid #1f2937;"><span data-i18n="updated">Cập nhật:</span> 29/05/2026</span>
+                    <span class="text-xs text-gray-400 font-medium bg-gray-900/60 px-2.5 py-1.5 rounded border border-gray-800" style="font-size:12px; color:#9ca3af; background-color: rgba(17,24,39,0.6); padding:6px 10px; border-radius:4px; border: 1px solid #1f2937;"><span data-i18n="updated">Cập nhật:</span> {REPORT_DATE_FMT}</span>
                 </div>
             </div>
         </div>
@@ -816,7 +877,7 @@ def generate_html_report(posts):
         const i18n = {
             vi: {
                 title: "PHÂN TÍCH HIỆU QUẢ TRUYỀN THÔNG",
-                subtitle: "Murrplastik Việt Nam · Báo cáo tháng 5",
+                subtitle: "{REPORT_SUBTITLE_VI_FMT}",
                 status: "Hoàn tất",
                 updated: "Cập nhật:",
                 kpi_views: "Tổng Số Lượt Xem",
@@ -860,7 +921,7 @@ def generate_html_report(posts):
             },
             en: {
                 title: "MEDIA PERFORMANCE ANALYSIS",
-                subtitle: "Murrplastik Vietnam · Report from May-01-2026 to May-28-2026",
+                subtitle: "{REPORT_SUBTITLE_EN_FMT}",
                 status: "Completed",
                 updated: "Updated:",
                 kpi_views: "Total Views",
@@ -1466,6 +1527,11 @@ def generate_html_report(posts):
     # Inject Fallback CSS elements
     html_content = html_content.replace('{FALLBACK_CHART_BARS}', fallback_chart_bars_html)
     html_content = html_content.replace('{FALLBACK_AUDIENCE_HTML}', fallback_audience_html)
+    
+    # Inject report dates and subtitles
+    html_content = html_content.replace('{REPORT_DATE_FMT}', report_date)
+    html_content = html_content.replace('{REPORT_SUBTITLE_VI_FMT}', report_subtitle_vi)
+    html_content = html_content.replace('{REPORT_SUBTITLE_EN_FMT}', report_subtitle_en)
 
     with open(HTML_OUTPUT, mode='w', encoding='utf-8') as f:
         f.write(html_content)
