@@ -503,12 +503,21 @@ def generate_html_report(posts):
         
         table {
             width: 100%;
-            border-collapse: collapse;
+            border-collapse: separate;
+            border-spacing: 0;
             text-align: left;
         }
         
         th, td {
             padding: 14px 16px;
+        }
+
+        td {
+            font-size: 14px;
+            max-width: 280px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
@@ -517,14 +526,8 @@ def generate_html_report(posts):
             color: #9ca3af;
             font-size: 12px;
             text-transform: uppercase;
-        }
-        
-        td {
-            font-size: 14px;
-            max-width: 280px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            /* border-collapse:separate friendly sticky border */
+            border-bottom: 2px solid rgba(255,255,255,0.1);
         }
         
         .badge {
@@ -586,13 +589,13 @@ def generate_html_report(posts):
         }
         @media (min-width: 768px) {
             .table-container {
-                max-height: none;
-                overflow-y: visible;
+                max-height: 75vh;
+                overflow-y: auto;
                 overflow-x: auto;
             }
             .sticky-th {
                 position: sticky;
-                top: 85px;
+                top: 0;
                 z-index: 10;
             }
         }
@@ -762,7 +765,7 @@ def generate_html_report(posts):
 
             <!-- Table Container (Horizontal scroll on mobile, visible on desktop for sticky headers) -->
             <div class="table-container custom-scrollbar border border-gray-800 rounded-lg bg-gray-950/20">
-                <table class="w-full text-left text-sm text-gray-200 border-collapse">
+                <table class="w-full text-left text-sm text-gray-200">
                     <thead>
                         <tr class="border-b border-gray-850">
                             <th class="sticky-th py-3.5 px-4 font-bold text-white text-xs uppercase tracking-wider min-w-[240px]" data-i18n="th_title">Tiêu Đề Bài Viết</th>
