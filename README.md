@@ -11,10 +11,14 @@ Dự án này tự động hóa quy trình phân tích dữ liệu hiệu quả 
 
 ```text
 d:\T&TVina\Report\
-├── Tỉ lệ giữu chân May-01-2026_May-28-2026_...csv  # File dữ liệu CSV gốc từ Facebook
-├── create_report.py                                # Script Python xử lý và kết xuất báo cáo
-├── report_media.html                            # Trang Dashboard báo cáo HTML (đã kết xuất)
-├── report_giu_chan_summary.csv                    # File tổng hợp kết quả (đọc tốt trên Excel)
+├── data/                                           # Thư mục chứa các file dữ liệu CSV gốc theo tháng
+│   ├── Tỉ lệ giữu chân May-01-2026_...csv         # Dữ liệu tháng 5 (tiếng Việt)
+│   └── Jun-01-2026_Jun-30-2026_...csv             # Dữ liệu tháng 6 (tiếng Anh)
+├── assets/                                         # Thư mục chứa hình ảnh, logo, favicon của dự án
+├── references/                                     # Thư mục chứa tài liệu nháp hoặc tham khảo
+├── create_report.py                                # Script Python xử lý và kết xuất báo cáo đa tháng
+├── report_media.html                               # Trang Dashboard báo cáo HTML (hỗ trợ chuyển đổi tháng)
+├── report_giu_chan_summary.csv                    # File tổng hợp kết quả của tất cả các tháng (đọc trên Excel)
 ├── index.html                                      # File chuyển hướng tự động (redirect) lên web
 ├── Cập Nhật Báo Cáo.bat                            # File chạy tự động hóa (chạy bằng click chuột)
 ├── package.json                                    # Cấu hình thư viện Node.js (gh-pages)
@@ -28,16 +32,14 @@ d:\T&TVina\Report\
 
 ### 1. Xử lý Dữ liệu (`create_report.py`)
 Mã nguồn Python có nhiệm vụ:
-* **Tự động quét file mới nhất**: Tự tìm tệp dữ liệu CSV có tên bắt đầu bằng `Tỉ lệ gi* chân` mới nhất trong thư mục.
-* **Xử lý chỉ số**: Tính toán tổng lượng xem, thời lượng xem trung bình, tương tác và tỷ lệ tương tác.
-* **Phân tích giữ chân**: Đọc dữ liệu giữ chân khán giả qua 40 điểm mốc thời gian của từng video.
-* **Phân tích nhân khẩu học**: Thống kê số lượng lượt xem theo nhóm độ tuổi, giới tính và quốc gia.
-* **Kết xuất tĩnh (Pre-rendering)**: Điền trực tiếp giá trị tính toán được vào mã HTML trước khi lưu. Điều này giúp các con số hiển thị đầy đủ ngay cả khi trình duyệt tắt JavaScript.
-* **Dự phòng ngoại tuyến (Fallback CSS)**: Tích hợp sẵn bộ khung layout CSS để khi xem thử trên điện thoại (QuickLook của Zalo, Viber, Email nơi bị chặn tải CSS ngoài), giao diện vẫn đẹp mắt, ngay ngắn và không bị lỗi vỡ khung hay trượt ngang.
+* **Tự động quét và phân loại theo tháng**: Quét toàn bộ các file dữ liệu CSV trong thư mục `data/` và tự động phân nhóm theo tháng dựa trên định dạng ngày tháng trong tên file.
+* **Hỗ trợ định dạng ngôn ngữ kép**: Đọc được cả file CSV xuất ra từ giao diện Facebook tiếng Việt (có cột "ID bài viết", "Xem tự nhiên", v.v.) và tiếng Anh (có cột "Post ID", "Organic", v.v.).
+* **Tính toán chỉ số & Phân tích giữ chân**: Tính toán tổng lượng xem, thời lượng xem trung bình, tỷ lệ giữ chân khán giả tại 41 mốc và phân tích nhân khẩu học cho từng tháng một cách độc lập.
+* **Kết xuất tĩnh & Động**: Tích hợp toàn bộ cơ sở dữ liệu các tháng vào trong file `report_media.html` dưới dạng JSON, giúp trang web hoạt động hoàn toàn offline, tải cực nhanh mà vẫn hỗ trợ chuyển đổi tháng và ngôn ngữ linh hoạt bằng JavaScript.
 
 ### 2. Tự động hóa Quy trình (`Cập Nhật Báo Cáo.bat`)
 Mỗi khi bạn chạy tệp này, Windows sẽ tự động thực hiện tuần tự:
-1. Chạy mã Python để cập nhật số liệu mới nhất vào file `report_media.html` và `report_giu_chan_summary.csv`.
+1. Chạy mã Python để quét toàn bộ dữ liệu trong `data/`, cập nhật `report_media.html` và `report_giu_chan_summary.csv`.
 2. Chạy lệnh Git để lưu trữ lịch sử thay đổi của bạn lên nhánh **`main`** của GitHub để sao lưu.
 3. Chạy công cụ deploy đẩy bản build sạch lên nhánh **`gh-pages`** của GitHub để cập nhật trang web trực tuyến tức thì.
 
@@ -48,10 +50,10 @@ Mỗi khi bạn chạy tệp này, Windows sẽ tự động thực hiện tuầ
 Khi bạn có dữ liệu Facebook mới cho các tuần hoặc tháng tiếp theo:
 
 1. **Bước 1:** Tải file CSV dữ liệu tỷ lệ giữ chân từ Facebook Insights về.
-2. **Bước 2:** Thả file CSV đó vào thư mục `d:\T&TVina\Report`. Bạn không cần xóa file cũ, Python sẽ tự động ưu tiên đọc file có thời gian cập nhật mới nhất.
+2. **Bước 2:** Thả file CSV đó vào thư mục **`data/`** (`d:\T&TVina\Report\data`). Bạn không cần xóa file cũ, Python sẽ tự động nhóm các file và hiển thị từng tháng tương ứng.
 3. **Bước 3:** Bấm đúp chuột (Double click) vào tệp **`Cập Nhật Báo Cáo.bat`**.
 4. **Bước 4:** Chờ cửa sổ đen chạy xong trong khoảng 5-10 giây.
-5. **Bước 5:** Mở đường link web **`https://lylamkhai218.github.io/report_media/`** và nhấn **`Ctrl + Shift + R`** (để xóa bộ nhớ đệm trình duyệt) là bạn sẽ thấy báo cáo mới đã trực tuyến!
+5. **Bước 5:** Mở đường link web **`https://lylamkhai218.github.io/report_media/`** và nhấn **`Ctrl + Shift + R`** (để xóa bộ nhớ đệm trình duyệt) là bạn sẽ thấy báo cáo mới đã cập nhật!
 
 ---
 

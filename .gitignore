@@ -6,3 +6,7 @@
 
 # Ignore temporary batch files if any
 *.tmp
+
+# Python cache files
+__pycache__/
+*.pyc
